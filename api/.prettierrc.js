@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-module.exports = {
+
+export default {
   semi: true,
   trailingComma: 'all',
   singleQuote: true,

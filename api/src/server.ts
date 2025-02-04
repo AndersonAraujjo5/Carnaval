@@ -1,5 +1,5 @@
-import app from "./app.js";
-import os from 'os'
+import app from './app.js';
+import os from 'os';
 
 // Função para obter o endereço IP local
 const getLocalIp = (): string => {
@@ -22,7 +22,8 @@ const getLocalIp = (): string => {
 
 const localIp = getLocalIp();
 
-const port = process.env.PORTA
+// eslint-disable-next-line no-undef
+const port = process.env.PORTA;
 
 app.listen(port, () => {
   console.log(`Servidor rodando em:`);
