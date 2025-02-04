@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Jurado {
+  id               Int                @id @default(autoincrement())
+  nome             String
+  login            String
+  senha            String
+  funcao           String
+  PermissaoAvaliar PermissaoAvaliar[]
+  Avaliacao        Avaliacao[]
+
+  @@map("jurado")
+}
+
+model Candidato {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  representa String
+  foto       String
+  Avaliacao  Avaliacao[]
+
+  @@map("candidato")
+}
+
+model ItemAvaliar {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  prioridade Int
+  Avaliacao  Avaliacao[]
+
+  @@map("item_avaliar")
+}
+
+model PermissaoAvaliar {
+  id        Int    @id @default(autoincrement())
+  id_jurado Int
+  jurado    Jurado @relation(fields: [id_jurado], references: [id])
+}
+
+model Avaliacao {
+  id               Int         @id @default(autoincrement())
+  id_item_avaliado Int
+  avaliacao        ItemAvaliar @relation(fields: [id_item_avaliado], references: [id])
+  nota             Int
+  id_candidato     Int
+  candidato        Candidato   @relation(fields: [id_candidato], references: [id])
+  id_jurado        Int
+  jurado           Jurado      @relation(fields: [id_jurado], references: [id])
+}
+
+model Usuario{
+  id Int @id @default(autoincrement())
+  nome String
+  login String
+  senha String
+}
