@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
+import yup from 'yup';
 import { Crud } from '../abstracts/Crud.js';
 import JuradoService from '../Service/Jurado.service';
-import yup from 'yup';
 
 export default new (class JuradoController implements Crud {
   async create(req: Request, res: Response) {
@@ -9,11 +9,11 @@ export default new (class JuradoController implements Crud {
       const response = await JuradoService.create(req);
       return res.status(200).json(response);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error instanceof yup.ValidationError) {
         return res.status(400).json({
           error: 'Erro de validação.',
-          details: error.errors, // Lista de mensagens de erro
+          details: error.errors,
         });
       }
       return res.status(500).json({ error: 'Erro interno do servidor.' });
@@ -28,14 +28,25 @@ export default new (class JuradoController implements Crud {
       if (error instanceof yup.ValidationError) {
         return res.status(400).json({
           error: 'Erro de validação.',
-          details: error.errors, // Lista de mensagens de erro
+          details: error.errors,
         });
       }
       return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
   }
   async update(req: Request, res: Response) {
-    throw new Error('Method not implemented.');
+    try {
+      const response = await JuradoService.update(req);
+      return res.status(200).json(response);
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        return res.status(400).json({
+          error: 'Erro de validação.',
+          details: error.errors,
+        });
+      }
+      return res.status(500).json({ error: 'Erro interno do servidor.' });
+    }
   }
   async delete(req: Request, res: Response) {
     throw new Error('Method not implemented.');
