@@ -7,8 +7,6 @@ export default new (class CheckData {
     senha: string;
     funcao: string;
   }) {
-    const msg = (v: string) => `${v} deve conter no minimo 3 e no maximo 255,
-     caracteres`;
     const schema = yup.object().shape({
       nome: yup.string().min(3).max(255).required().trim(),
       senha: yup.string().min(3).max(255).required().trim(),
@@ -25,8 +23,6 @@ export default new (class CheckData {
     senha: string;
     funcao: string;
   }) {
-    const msg = (v: string) => `${v} deve conter no minimo 3 e no maximo 255,
-     caracteres`;
     const schema = yup.object().shape({
       id: yup.number().required(),
       nome: yup.string().min(3).max(255).trim(),
