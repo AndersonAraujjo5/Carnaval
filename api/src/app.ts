@@ -1,4 +1,5 @@
-import JuradoRoute from '@/routes/jurado.routes';
+import JuradoRoute from '@/routes/Jurado.routes';
+import CandidatoRoutes from './routes/Candidato.routes';
 import { config } from 'dotenv';
 import express from 'express';
 import path from 'path';
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, '..', 'uploads')));
 
-app.use('/api', JuradoRoute);
+app.use('/api', JuradoRoute.router);
+app.use('/api', CandidatoRoutes.router);
 
 export default app;

@@ -1,12 +1,13 @@
 import { db } from '@/database/db.js';
-import { JuradoModel } from '@/models/Jurado.model';
-import CheckData from '@/service/CheckData.service';
-import PasswordService from '@/service/Password.service.js';
-import { ValidationError } from '@/service/ValidationError.service.js';
+import CheckData from '@/utils/CheckData.service';
+import PasswordService from '@/utils/Password.service.js';
+import { ValidationError } from '@/utils/ValidationError.service.js';
 import { Request } from 'express';
+import { Service } from '@/service/Service';
+import { Jurado } from '@prisma/client';
 
-export default new (class JuradoService {
-  public async create(req: Request): Promise<JuradoModel> {
+class JuradoService extends Service {
+  public async create(req: Request): Promise<Jurado> {
     const data = await CheckData.createJurado(req.body);
     const response = await db.jurado.create({
       data: {
@@ -18,20 +19,23 @@ export default new (class JuradoService {
     return response;
   }
 
-  public async read(): Promise<JuradoModel[]> {
+  public async read(): Promise<Jurado[]> {
     const response = await db.jurado.findMany();
     return response;
   }
 
-  public async update(req: Request<{ id: string }>): Promise<JuradoModel> {
-    const find = this.find(req.params);
-    if (!find)
-      throw new ValidationError('Id do jurado não encontrado', [
-        'Jurado não encontrado',
-      ]);
-    const data = await CheckData.updateJurado(req.body);
+  public async update(req: Request<{ id: string }>): Promise<Jurado> {
+    await this.find(req.params);
+    const data = await CheckData.updateJurado({ ...req.body, ...req.params });
+    const object = Object.keys(data).filter(
+      (key) => !['id', 'nome', 'senha', 'login', 'funcao'].includes(key),
+    );
+    if (object.length > 0)
+      throw new ValidationError(`Parametro "${object.join(',')}" inválido`);
+    const { id } = data;
+    delete data.id;
     const response = await db.jurado.update({
-      where: { id: data.id },
+      where: { id },
       data: data,
     });
 
@@ -39,22 +43,14 @@ export default new (class JuradoService {
   }
 
   public async delete(req: Request<{ id: string }>) {
-    const find = this.find(req.params);
-    if (!find)
-      throw new ValidationError('Id do jurado não encontrado', [
-        'Jurado não encontrado',
-      ]);
+    const find = await this.find(req.params);
     const response = await db.jurado.delete({
-      where: { id: req.body.id },
+      where: { id: find.id },
     });
     return response;
   }
 
-  private async find({
-    id,
-  }: {
-    id: number | string;
-  }): Promise<JuradoModel | null> {
+  protected async find({ id }: { id: number | string }): Promise<Jurado> {
     if (typeof id == 'string') id = Number(id);
     if (isNaN(id)) throw new ValidationError(`Parametro ${id} inválido`);
     const data = await db.jurado.findUnique({
@@ -62,7 +58,13 @@ export default new (class JuradoService {
         id,
       },
     });
+    if (!data)
+      throw new ValidationError('Id do jurado não encontrado', [
+        'Jurado não encontrado',
+      ]);
 
     return data;
   }
-})();
+}
+
+export default new JuradoService();

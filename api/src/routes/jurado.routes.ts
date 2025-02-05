@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import JuradoController from '../controllers/Jurado.controller';
+import JuradoService from '@/service/Jurado.service';
+import { Routes } from '@/routes/Routes';
 
 const router = Router();
 
-const controller = new JuradoController();
+const controller = new JuradoController(JuradoService);
 
-router.post('/v1/jurado', (req, res) => controller.create(req, res));
-router.get('/v1/jurado', (req, res) => controller.read(req, res));
-router.put('/v1/jurado/:id', (req, res) => controller.update(req, res));
-router.delete('/v1/jurado/:id', (req, res) => controller.delete(req, res));
+class JuradoRoutes extends Routes {}
 
-export default router;
+export default new JuradoRoutes(controller, router, 'jurado');
