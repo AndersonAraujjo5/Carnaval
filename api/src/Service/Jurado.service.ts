@@ -1,10 +1,10 @@
 import { db } from '@/database/db.js';
-import CheckData from '@/utils/CheckData.service';
-import PasswordService from '@/utils/Password.service.js';
-import { ValidationError } from '@/utils/ValidationError.service.js';
-import { Request } from 'express';
 import { Service } from '@/service/Service';
+import CheckData from '@/utils/CheckData.utils';
+import PasswordUtils from '@/utils/Password.utils';
+import { ValidationError } from '@/utils/ValidationError.utils';
 import { Jurado } from '@prisma/client';
+import { Request } from 'express';
 
 class JuradoService extends Service {
   public async create(req: Request): Promise<Jurado> {
@@ -12,7 +12,7 @@ class JuradoService extends Service {
     const response = await db.jurado.create({
       data: {
         ...data,
-        senha: await PasswordService.encrypt(data),
+        senha: await PasswordUtils.encrypt(data),
       },
     });
 

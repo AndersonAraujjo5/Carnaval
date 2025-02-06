@@ -1,5 +1,5 @@
-import app from './app.js';
 import os from 'os';
+import app from './app.js';
 
 // Função para obter o endereço IP local
 const getLocalIp = (): string => {

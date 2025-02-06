@@ -1,9 +1,9 @@
 import { db } from '@/database/db';
-import CheckDataService from '@/utils/CheckData.service';
-import { Request, Response } from 'express';
 import { Service } from '@/service/Service';
+import CheckDataService from '@/utils/CheckData.utils';
+import { ValidationError } from '@/utils/ValidationError.utils';
 import { Candidato } from '@prisma/client';
-import { ValidationError } from '@/utils/ValidationError.service';
+import { Request, Response } from 'express';
 
 class CandidatoService extends Service {
   public async create(req: Request, res: Response): Promise<Candidato> {
@@ -20,9 +20,19 @@ class CandidatoService extends Service {
     res: Response,
   ): Promise<Candidato> {
     await this.find(req.params);
-    const data = await CheckDataService.updateCandidato(req.body);
+    const data = await CheckDataService.updateCandidato({
+      ...req.body,
+      ...req.params,
+    });
+    const object = Object.keys(data).filter(
+      (key) => !['id', 'nome', 'senha', 'login', 'funcao'].includes(key),
+    );
+    if (object.length > 0)
+      throw new ValidationError(`Parametro "${object.join(',')}" inválido`);
+    const { id } = data;
+    delete data.id;
     const response = await db.candidato.update({
-      where: { id: data.id },
+      where: { id },
       data,
     });
 

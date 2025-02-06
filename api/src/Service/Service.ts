@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import {
   Avaliacao,
   Candidato,
@@ -7,14 +6,16 @@ import {
   PermissaoAvaliar,
   Usuario,
 } from '@prisma/client';
+import { Request, Response } from 'express';
 
-type T =
+export type T =
   | Candidato
   | Jurado
   | Avaliacao
   | ItemAvaliar
   | PermissaoAvaliar
   | Usuario;
+
 export abstract class Service {
   public abstract create(req: Request, res: Response): Promise<T>;
   public abstract read(req: Request, res: Response): Promise<T[]>;

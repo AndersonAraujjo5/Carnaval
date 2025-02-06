@@ -1,5 +1,5 @@
 import { Service } from '@/service/Service';
-import { ValidationError } from '@/utils/ValidationError.service';
+import { ValidationError } from '@/utils/ValidationError.utils';
 import { Request, Response } from 'express';
 import yup from 'yup';
 export abstract class Controller {

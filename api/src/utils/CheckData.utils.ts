@@ -33,8 +33,8 @@ export default new (class CheckData {
   async createCandidato(data: Candidato) {
     const schema = yup.object().shape({
       nome: yup.string().min(3).max(255).required().trim(),
-      representa: yup.string().min(3).max(255).required().trim(),
-      foto: yup.string().min(3).max(255).required().trim(),
+      representa: yup.string().required().trim(),
+      foto: yup.string().required().trim(),
     });
 
     return await schema.validate(data);
@@ -42,7 +42,7 @@ export default new (class CheckData {
 
   async updateCandidato(data: Candidato) {
     const schema = yup.object().shape({
-      id: yup.number().required(),
+      id: yup.number(),
       nome: yup.string().min(3).max(255).trim(),
       representa: yup.string().min(3).max(255).trim(),
       foto: yup.string().min(3).max(255).trim(),
